@@ -55,12 +55,17 @@ All data is client-side only. Local storage holds a single object of last-used f
 
 All internal calculations must happen in a single unit (cm) to avoid conversion bugs. Convert user input to cm on the way in, convert results to the display unit on the way out. Never mix formulas across units.
 
-Formulas (C = waist circumference in cm, after seam allowance subtracted):
+Formulas (C = waist circumference in cm, as measured on the body):
 - Full circle radius: R = C / (2π)
 - 3/4 circle radius: R = (4/3 × C) / (2π)
 - Half circle radius: R = (2 × C) / (2π)
 - Quarter circle radius: R = (4 × C) / (2π)
-- Fabric length: F = R + skirtLength + hemAllowance
+
+Seam allowance applies to the radius, not the circumference. The waist hole is cut smaller by the seam allowance, so that sewing the seam opens it back out to the measured waist:
+- Cut waist radius: Rcut = R - seamAllowance
+
+Fabric length is the amount to buy. It spans the full circle, not a single radius, and uses the finished radius R rather than the cut radius:
+- Fabric length: F = 2 × (R + skirtLength + hemAllowance)
 
 Seam allowance and hem allowance should be configurable constants, not hardcoded magic numbers scattered through the code.
 

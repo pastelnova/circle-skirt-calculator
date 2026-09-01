@@ -1,6 +1,6 @@
 # Circle Skirt Calculator - Project Overview
 
-<!-- blueprint:source-hash bcc8ee4b385d6b4515a1915086063a306a73bd5ccc4155668e6c8e380f020357 -->
+<!-- blueprint:source-hash 70225e486f75589aab868632f86673463344376a237d63a58575b4d854a190ae -->
 
 > A client-side calculator that turns a waist measurement into circle skirt
 > pattern numbers: waist radius and total fabric length.
@@ -44,8 +44,7 @@ and presentation around it.
 Post-MVP, tracked but not built: pattern diagram (10), size presets (11), cut
 sheet export (12), adjustable allowances (13).
 
-Pre-build setup, not features: Vitest via `/tests`, then Tailwind CSS. Both
-precede Feature 1.
+Pre-build setup is done: Vitest and Tailwind v4 are both installed.
 
 ## Data model
 
@@ -82,33 +81,42 @@ every feature that touches a number.
 **All internal math runs in cm.** Convert on input, convert on output, never mix
 units inside a formula.
 
-With `C` as waist circumference in cm after seam allowance is applied:
+With `C` as the waist circumference in cm, as measured on the body:
 
-| Skirt type | Waist radius |
+| Skirt type | Finished waist radius |
 | --- | --- |
 | Full circle | `R = C / (2π)` |
 | 3/4 circle | `R = (4/3 × C) / (2π)` |
 | Half circle | `R = (2 × C) / (2π)` |
 | Quarter circle | `R = (4 × C) / (2π)` |
 
-Fabric length: `F = R + skirtLength + hemAllowance`
+**Seam allowance applies to the radius, not the circumference.** The waist hole
+is cut smaller so that sewing the seam opens it back out to the measured waist:
+
+    Rcut = R - SEAM_ALLOWANCE
+
+**Fabric length is the amount to buy**, spanning the full circle rather than a
+single radius, and computed from the finished `R`, not `Rcut`:
+
+    F = 2 × (R + skirtLength + HEM_ALLOWANCE)
 
 Seam and hem allowance are named constants, not literals scattered through the
 code.
 
-> TODO: the project plan says `C` is the waist circumference "after seam
-> allowance subtracted," but a seam allowance is normally added at the cut edge.
-> Settle the sign before Feature 1; it changes every output.
+> Both rules above were open questions and are now settled. A sewist reading
+> "fabric length" is buying fabric, so under-reporting it by half is the
+> expensive failure mode here.
 
 ## Tech stack
 
 - **React 19 + TypeScript** - UI and type safety
 - **Vite** - dev server and build. No SSR; this is a pure client-side app
-- **Tailwind CSS** - styling. Not yet installed; a pre-build step
+- **Tailwind CSS v4** - styling. Installed, wired through the Vite plugin,
+  configured CSS-first via `@theme` in `src/index.css`
 - **Zod** - input validation at the form boundary. Not yet installed; arrives
   with Feature 7
-- **Vitest** - unit tests for the calculation engine. Not yet installed; a
-  pre-build step
+- **Vitest** - unit tests for the calculation engine. Installed, and `npm test`
+  is declared in `AGENTS.md`, so the logic-test gate is on
 - **ESLint (flat config)** - linting. Already configured
 
 Source layout: `src/components/` for UI, `src/lib/` for calculation, conversion,
@@ -138,13 +146,12 @@ enumerate.
 
 > Resolve these in the plans, then re-run `/overview`.
 
-- **Seam allowance sign.** See the Calculation contract TODO above. This is the
-  highest-value thing to settle, because it silently changes every result.
-- **Stack not yet installed.** Tailwind, Zod, and Vitest are all planned but
-  absent from `package.json`.
-- **`coding-standards.md` contradicts the plans.** It was tuned from the bare
-  scaffold and still says plain CSS, no framework, and no test gate. Update it
-  before `/implement` reads it.
+- **Zod not yet installed.** Tailwind and Vitest are in; Zod arrives with
+  Feature 7.
+- **Fabric length is uniform across skirt types.** `F = 2 x (R + L + hem)`
+  describes the full circle's span. A quarter circle pattern physically needs
+  less fabric than that, so the figure is safe but generous. Refine later if it
+  matters.
 - **`strict` is off** in `tsconfig.app.json`. Cheap to enable now, before the
   calculation engine exists.
 - **Custom length bounds undefined.** Feature 7 validates "unreasonable values"
