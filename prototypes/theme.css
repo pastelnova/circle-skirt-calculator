@@ -1,0 +1,57 @@
+/* Theme variables - the durable output of /prototype.
+   Warm and crafty, light mode: a cream ground with ink text, terracotta accent,
+   serif headings, and mono tabular numerals for measurements.
+
+   This file is the only source of the look. Tweak a value here and every mockup
+   restyles at once. When Tailwind is installed in pre-build setup, these port
+   into a Tailwind v4 `@theme` block in `src/index.css`. Layout and component
+   rules deliberately live in mockup.css, not here, so this stays portable. */
+
+:root {
+  /* surfaces */
+  --bg: #f7f3ec;              /* page, oat                       */
+  --surface: #fffdf9;         /* cards, the paper on the table   */
+  --sunken: #efe8dd;          /* input wells, unselected controls */
+  --border: #e2d8c9;
+  --border-strong: #c9bba6;   /* focus outlines, dividers that must read */
+
+  /* text */
+  --text: #2b2622;            /* ink, warm near-black */
+  --muted: #6f645a;           /* labels, secondary    */
+  --faint: #a2968a;           /* hints, placeholders  */
+
+  /* accent */
+  --accent: #b8563a;          /* terracotta: actions, focus, result figures */
+  --accent-hover: #a04a30;
+  --accent-soft: #f4e4de;     /* tint behind a selected control */
+  --accent-ink: #fffdf9;      /* text on accent */
+
+  /* error state - input validation, feature 7 */
+  --error: #a8322b;
+  --error-soft: #faeae8;
+  --error-border: #d9a49d;
+
+  /* notice state - restored from local storage, feature 8 */
+  --notice: #6a5a35;
+  --notice-soft: #f5eeda;
+  --notice-border: #ddcfa8;
+
+  /* type */
+  --font-serif: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 20px;
+  --space-5: 32px;
+  --space-6: 48px;
+
+  --radius-sm: 5px;
+  --radius: 8px;
+  --radius-lg: 14px;
+
+  --measure: 560px;           /* content column width */
+}
