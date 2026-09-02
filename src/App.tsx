@@ -110,7 +110,7 @@ function App() {
   return (
     <main className="mx-auto max-w-measure px-3 py-5 sm:px-5 sm:py-12">
       <header className="mb-8">
-        <h1 className="mb-1 font-serif text-[30px] font-semibold tracking-[-0.01em] text-text">
+        <h1 className="mb-1 font-serif text-[30px] font-semibold tracking-[-0.01em] text-accent">
           Circle Skirt Calculator
         </h1>
         <p className="text-muted">Waist to pattern, in one step.</p>
