@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { HEM_ALLOWANCE, LENGTH_PRESETS, SEAM_ALLOWANCE } from './constants'
-import { calculateSkirt, cutRadius, fabricLength, waistRadius } from './skirt'
+import {
+  calculateSkirt,
+  cutRadius,
+  fabricLength,
+  toSkirtInput,
+  waistRadius,
+} from './skirt'
 
 describe('waistRadius', () => {
   it('derives each skirt type from a 68cm waist', () => {
@@ -76,5 +82,69 @@ describe('calculateSkirt', () => {
     expect(result.cutRadiusCm).toBe(0)
     expect(Number.isNaN(result.fabricLengthCm)).toBe(false)
     expect(result.fabricLengthCm).toBeGreaterThan(0)
+  })
+})
+
+describe('toSkirtInput', () => {
+  const base = {
+    skirtType: 'full',
+    lengthPreset: 'midi',
+    customLengthCm: null,
+  } as const
+
+  it('has nothing to compute without a waist', () => {
+    expect(toSkirtInput({ ...base, waistCm: null })).toBeNull()
+  })
+
+  it('treats a zero or negative waist as no result yet', () => {
+    expect(toSkirtInput({ ...base, waistCm: 0 })).toBeNull()
+    expect(toSkirtInput({ ...base, waistCm: -10 })).toBeNull()
+  })
+
+  it('passes each preset through with the waist and type', () => {
+    for (const lengthPreset of ['mini', 'midi', 'maxi'] as const) {
+      expect(toSkirtInput({ ...base, lengthPreset, waistCm: 68 })).toEqual({
+        waistCm: 68,
+        skirtType: 'full',
+        lengthPreset,
+      })
+    }
+  })
+
+  it('drops a custom length that no preset asked for', () => {
+    const input = toSkirtInput({ ...base, waistCm: 68, customLengthCm: 99 })
+    expect(input).not.toHaveProperty('customLengthCm')
+  })
+
+  it('needs a custom length before a custom skirt can be computed', () => {
+    const custom = { ...base, lengthPreset: 'custom', waistCm: 68 } as const
+    expect(toSkirtInput({ ...custom, customLengthCm: null })).toBeNull()
+    expect(toSkirtInput({ ...custom, customLengthCm: 0 })).toBeNull()
+    expect(toSkirtInput({ ...custom, customLengthCm: -5 })).toBeNull()
+  })
+
+  it('carries the custom length through when it has one', () => {
+    expect(
+      toSkirtInput({
+        ...base,
+        lengthPreset: 'custom',
+        waistCm: 68,
+        customLengthCm: 45,
+      }),
+    ).toEqual({
+      waistCm: 68,
+      skirtType: 'full',
+      lengthPreset: 'custom',
+      customLengthCm: 45,
+    })
+  })
+
+  it('feeds the engine the numbers the mockup gets wrong', () => {
+    const input = toSkirtInput({ ...base, waistCm: 68 })
+    expect(input).not.toBeNull()
+
+    const result = calculateSkirt(input!)
+    expect(result.cutRadiusCm).toBeCloseTo(9.3225, 3)
+    expect(result.fabricLengthCm).toBeCloseTo(145.6451, 3)
   })
 })

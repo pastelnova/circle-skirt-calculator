@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { LengthSelector } from './components/LengthSelector'
+import { ResultsDisplay } from './components/ResultsDisplay'
 import { SkirtTypeSelector } from './components/SkirtTypeSelector'
 import { UnitToggle } from './components/UnitToggle'
 import { WaistInput } from './components/WaistInput'
-import { HEM_ALLOWANCE, SEAM_ALLOWANCE } from './lib/constants'
-import { formatMeasurement, unitLabel } from './lib/units'
+import { calculateSkirt, toSkirtInput } from './lib/skirt'
 import { useMeasurementDraft } from './lib/useMeasurementDraft'
 import type { LengthPreset, SkirtType, Unit } from './types/skirt'
 
@@ -14,13 +14,22 @@ function App() {
   const [lengthPreset, setLengthPreset] = useState<LengthPreset>('midi')
   const customLength = useMeasurementDraft(unit)
   const waist = useMeasurementDraft(unit)
-  const label = unitLabel(unit)
 
   function handleUnitChange(next: Unit) {
     setUnit(next)
     customLength.reformat(next)
     waist.reformat(next)
   }
+
+  // Derived on every render rather than stored, so the numbers cannot drift out
+  // of step with the inputs they came from.
+  const input = toSkirtInput({
+    waistCm: waist.cm,
+    skirtType,
+    lengthPreset,
+    customLengthCm: customLength.cm,
+  })
+  const result = input === null ? null : calculateSkirt(input)
 
   return (
     <main className="mx-auto max-w-measure px-3 py-5 sm:px-5 sm:py-12">
@@ -49,11 +58,7 @@ function App() {
           />
         </div>
 
-        <p className="mt-8 border-t border-border pt-8 text-[13px] text-muted">
-          After a {formatMeasurement(SEAM_ALLOWANCE, unit)} {label} seam
-          allowance, plus {formatMeasurement(HEM_ALLOWANCE, unit)} {label} for
-          the hem.
-        </p>
+        <ResultsDisplay result={result} unit={unit} />
       </section>
     </main>
   )

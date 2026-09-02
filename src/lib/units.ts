@@ -53,6 +53,16 @@ export function formatMeasurement(cm: number, unit: Unit): string {
   return String(Number(rounded))
 }
 
+/**
+ * A result number in the display unit, at fixed precision. Unlike
+ * formatMeasurement it keeps trailing zeros, because the two result tiles set
+ * their figures in tabular numerals and a trimmed value breaks the digit
+ * alignment between them.
+ */
+export function formatResult(cm: number, unit: Unit): string {
+  return toDisplay(cm, unit).toFixed(DECIMALS[unit])
+}
+
 export function unitLabel(unit: Unit): string {
   return unit
 }

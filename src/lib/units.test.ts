@@ -3,6 +3,7 @@ import {
   CM_PER_INCH,
   cmToInches,
   formatMeasurement,
+  formatResult,
   fromDisplay,
   inchesToCm,
   parseMeasurement,
@@ -99,6 +100,24 @@ describe('parseMeasurement', () => {
     expect(parseMeasurement('Infinity')).toBeNull()
     expect(parseMeasurement('-Infinity')).toBeNull()
     expect(parseMeasurement('NaN')).toBeNull()
+  })
+})
+
+describe('formatResult', () => {
+  it('rounds to one decimal in cm', () => {
+    expect(formatResult(10.8225, 'cm')).toBe('10.8')
+    expect(formatResult(145.645, 'cm')).toBe('145.6')
+  })
+
+  it('keeps a trailing zero, unlike formatMeasurement', () => {
+    expect(formatResult(15, 'cm')).toBe('15.0')
+    expect(formatResult(0, 'cm')).toBe('0.0')
+    expect(formatMeasurement(15, 'cm')).toBe('15')
+  })
+
+  it('converts before rounding, to two decimals in inches', () => {
+    expect(formatResult(9.3225, 'in')).toBe('3.67')
+    expect(formatResult(10, 'in')).toBe('3.94')
   })
 })
 
