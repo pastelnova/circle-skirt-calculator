@@ -28,7 +28,7 @@ export function ResultsDisplay({
   ]
 
   return (
-    <div className="mt-8 grid grid-cols-2 gap-3 border-t border-border pt-8">
+    <div className="mt-8 grid grid-cols-1 gap-3 border-t border-border pt-8 xs:grid-cols-2">
       {tiles.map((tile) => (
         <div key={tile.name} className="rounded-md bg-sunken p-5">
           <div className="mb-2 text-[12px] font-semibold tracking-[0.04em] text-muted uppercase">
@@ -45,7 +45,7 @@ export function ResultsDisplay({
         </div>
       ))}
       <p
-        className={`col-span-2 text-[13px] ${result === null ? 'text-faint' : 'text-muted'}`}
+        className={`col-span-full text-[13px] ${result === null ? 'text-faint' : 'text-muted'}`}
       >
         {result === null
           ? hasErrors

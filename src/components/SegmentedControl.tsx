@@ -29,7 +29,7 @@ export function SegmentedControl<T extends string>({
       <div
         role="group"
         aria-labelledby={labelId}
-        className={`flex gap-1 rounded-md bg-sunken p-1 ${compact ? 'w-fit' : ''}`}
+        className={`flex flex-wrap gap-1 rounded-md bg-sunken p-1 ${compact ? 'w-fit' : ''}`}
       >
         {options.map((option) => {
           const selected = option.value === value
@@ -39,8 +39,8 @@ export function SegmentedControl<T extends string>({
               type="button"
               aria-pressed={selected}
               onClick={() => onChange(option.value)}
-              className={`rounded-sm border py-2 text-sm whitespace-nowrap ${
-                compact ? 'min-w-14 px-3' : 'flex-1 px-2 sm:px-3'
+              className={`rounded-sm border py-2 text-sm whitespace-nowrap pointer-coarse:min-h-11 ${
+                compact ? 'min-w-14 px-3' : 'grow basis-[40%] px-3 xs:flex-1'
               } ${
                 selected
                   ? 'border-border-strong bg-surface font-semibold text-accent'

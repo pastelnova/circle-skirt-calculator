@@ -35,4 +35,9 @@
   --radius-lg: 14px;
 
   --container-measure: 560px;
+
+  /* The mockup's mobile block is max-width: 480px. Tailwind's built-in sm: is
+     640px, which would stack the results in a window that comfortably fits two
+     tiles. */
+  --breakpoint-xs: 30rem;
 }
