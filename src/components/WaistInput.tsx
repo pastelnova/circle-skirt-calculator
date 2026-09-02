@@ -23,7 +23,15 @@ export function WaistInput({ value, onChange, unit, error }: WaistInputProps) {
       {/* Native details, so the keyboard and screen reader behavior comes for
           free. The marker is replaced rather than hidden, per the mockup. */}
       <details className="mt-2 text-[13px] text-muted">
-        <summary className="cursor-pointer list-none text-accent before:font-bold before:content-['?_'] hover:text-accent-hover pointer-coarse:flex pointer-coarse:min-h-11 pointer-coarse:items-center pointer-coarse:gap-1 [&::-webkit-details-marker]:hidden">
+        <summary className="group flex cursor-pointer list-none items-center gap-2 text-accent hover:text-accent-hover pointer-coarse:min-h-11 [&::-webkit-details-marker]:hidden">
+          {/* A real element, not a ::before glyph: a pseudo-element cannot be
+              centered in a circle without the flex context this span gets. */}
+          <span
+            aria-hidden="true"
+            className="flex size-[18px] shrink-0 items-center justify-center rounded-full bg-accent pt-px pl-px text-[11px] font-bold text-accent-ink group-hover:bg-accent-hover"
+          >
+            ?
+          </span>
           How to measure your waist
         </summary>
         <div className="mt-2 rounded-sm bg-sunken p-3">
