@@ -2,38 +2,24 @@ import { useState } from 'react'
 import { LengthSelector } from './components/LengthSelector'
 import { SkirtTypeSelector } from './components/SkirtTypeSelector'
 import { UnitToggle } from './components/UnitToggle'
+import { WaistInput } from './components/WaistInput'
 import { HEM_ALLOWANCE, SEAM_ALLOWANCE } from './lib/constants'
-import {
-  formatMeasurement,
-  fromDisplay,
-  parseMeasurement,
-  unitLabel,
-} from './lib/units'
+import { formatMeasurement, unitLabel } from './lib/units'
+import { useMeasurementDraft } from './lib/useMeasurementDraft'
 import type { LengthPreset, SkirtType, Unit } from './types/skirt'
 
 function App() {
   const [unit, setUnit] = useState<Unit>('cm')
   const [skirtType, setSkirtType] = useState<SkirtType>('full')
   const [lengthPreset, setLengthPreset] = useState<LengthPreset>('midi')
-  // The draft is what the field shows; the cm value is canonical and never
-  // rounded for display. See the spec on why both exist.
-  const [customLengthInput, setCustomLengthInput] = useState('')
-  const [customLengthCm, setCustomLengthCm] = useState<number | null>(null)
+  const customLength = useMeasurementDraft(unit)
+  const waist = useMeasurementDraft(unit)
   const label = unitLabel(unit)
 
   function handleUnitChange(next: Unit) {
     setUnit(next)
-    // Rewritten from the canonical cm value, never from the rounded string
-    // already in the field, or the number decays on every toggle.
-    if (customLengthCm !== null) {
-      setCustomLengthInput(formatMeasurement(customLengthCm, next))
-    }
-  }
-
-  function handleCustomLengthChange(next: string) {
-    setCustomLengthInput(next)
-    const parsed = parseMeasurement(next)
-    setCustomLengthCm(parsed === null ? null : fromDisplay(parsed, unit))
+    customLength.reformat(next)
+    waist.reformat(next)
   }
 
   return (
@@ -53,8 +39,13 @@ function App() {
             value={lengthPreset}
             onChange={setLengthPreset}
             unit={unit}
-            customLength={customLengthInput}
-            onCustomLengthChange={handleCustomLengthChange}
+            customLength={customLength.input}
+            onCustomLengthChange={customLength.change}
+          />
+          <WaistInput
+            value={waist.input}
+            onChange={waist.change}
+            unit={unit}
           />
         </div>
 
