@@ -12,6 +12,8 @@ export interface MeasurementDraft {
   touched: boolean
   change: (next: string) => void
   reformat: (nextUnit: Unit) => void
+  /** Back to empty and untouched, for Start over. */
+  reset: () => void
 }
 
 /**
@@ -22,9 +24,16 @@ export interface MeasurementDraft {
  * the value. Keeping both, and never deriving one from the other's rounded form, is
  * what stops that.
  */
-export function useMeasurementDraft(unit: Unit): MeasurementDraft {
-  const [input, setInput] = useState('')
-  const [cm, setCm] = useState<number | null>(null)
+export function useMeasurementDraft(
+  unit: Unit,
+  initialCm: number | null = null,
+): MeasurementDraft {
+  const [input, setInput] = useState(() =>
+    initialCm === null ? '' : formatMeasurement(initialCm, unit),
+  )
+  const [cm, setCm] = useState<number | null>(initialCm)
+  // A restored value was never typed in this session, and it passed validation
+  // on the way out of storage, so there is nothing to warn about yet.
   const [touched, setTouched] = useState(false)
 
   function change(next: string) {
@@ -44,5 +53,11 @@ export function useMeasurementDraft(unit: Unit): MeasurementDraft {
     }
   }
 
-  return { input, cm, touched, change, reformat }
+  function reset() {
+    setInput('')
+    setCm(null)
+    setTouched(false)
+  }
+
+  return { input, cm, touched, change, reformat, reset }
 }
