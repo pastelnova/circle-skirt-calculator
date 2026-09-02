@@ -7,6 +7,9 @@ export interface MeasurementDraft {
   input: string
   /** Canonical value, always cm, never rounded for display. */
   cm: number | null
+  /** True once the user has typed in the field, so an untouched field is not
+   *  scolded for being empty on first paint. */
+  touched: boolean
   change: (next: string) => void
   reformat: (nextUnit: Unit) => void
 }
@@ -22,9 +25,11 @@ export interface MeasurementDraft {
 export function useMeasurementDraft(unit: Unit): MeasurementDraft {
   const [input, setInput] = useState('')
   const [cm, setCm] = useState<number | null>(null)
+  const [touched, setTouched] = useState(false)
 
   function change(next: string) {
     setInput(next)
+    setTouched(true)
     const parsed = parseMeasurement(next)
     setCm(parsed === null ? null : fromDisplay(parsed, unit))
   }
@@ -39,5 +44,5 @@ export function useMeasurementDraft(unit: Unit): MeasurementDraft {
     }
   }
 
-  return { input, cm, change, reformat }
+  return { input, cm, touched, change, reformat }
 }

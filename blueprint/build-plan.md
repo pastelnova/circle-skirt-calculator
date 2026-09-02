@@ -18,7 +18,7 @@ before Feature 1.
 - [x] 4. **Length selector** - mini, midi, and maxi presets plus a custom override.
 - [x] 5. **Waist input** - measurement field with a short "how to measure your waist" helper.
 - [x] 6. **Results display** - waist radius and total fabric length in the selected unit.
-- [ ] 7. **Input validation** - Zod schema for waist and custom length: empty, zero, negative, and out-of-range values.
+- [x] 7. **Input validation** - Zod schema for waist and custom length: empty, zero, negative, and out-of-range values.
 - [ ] 8. **Saved inputs** - persist last-used values to local storage and restore them on reload.
 - [ ] 9. **Responsive layout** - mobile-first styling pass so the calculator is usable at the cutting table.
 

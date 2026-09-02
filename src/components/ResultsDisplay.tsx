@@ -5,9 +5,16 @@ import type { SkirtResult, Unit } from '../types/skirt'
 interface ResultsDisplayProps {
   result: SkirtResult | null
   unit: Unit
+  /** True when a field is showing an error right now, not merely when some
+   *  value failed validation. An untouched empty waist is neither. */
+  hasErrors?: boolean
 }
 
-export function ResultsDisplay({ result, unit }: ResultsDisplayProps) {
+export function ResultsDisplay({
+  result,
+  unit,
+  hasErrors = false,
+}: ResultsDisplayProps) {
   const label = unitLabel(unit)
   const tiles = [
     {
@@ -41,7 +48,9 @@ export function ResultsDisplay({ result, unit }: ResultsDisplayProps) {
         className={`col-span-2 text-[13px] ${result === null ? 'text-faint' : 'text-muted'}`}
       >
         {result === null
-          ? 'Enter your waist measurement to see the numbers.'
+          ? hasErrors
+            ? 'Fix the highlighted fields to see the numbers.'
+            : 'Enter your waist measurement to see the numbers.'
           : `After a ${formatMeasurement(SEAM_ALLOWANCE, unit)} ${label} seam allowance, plus ${formatMeasurement(HEM_ALLOWANCE, unit)} ${label} for the hem.`}
       </p>
     </div>

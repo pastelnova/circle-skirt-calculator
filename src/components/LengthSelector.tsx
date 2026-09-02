@@ -23,6 +23,7 @@ interface LengthSelectorProps {
   unit: Unit
   customLength: string
   onCustomLengthChange: (value: string) => void
+  customLengthError?: string
 }
 
 export function LengthSelector({
@@ -31,6 +32,7 @@ export function LengthSelector({
   unit,
   customLength,
   onCustomLengthChange,
+  customLengthError,
 }: LengthSelectorProps) {
   return (
     <div>
@@ -48,6 +50,7 @@ export function LengthSelector({
             unit={unit}
             placeholder="Custom length"
             label="Custom length"
+            error={customLengthError}
           />
         </div>
       ) : (

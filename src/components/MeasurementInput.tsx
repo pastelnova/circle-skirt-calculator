@@ -14,6 +14,8 @@ interface MeasurementInputProps {
    *  Never both: a visible label and an aria-label give a sighted user one name
    *  and a screen reader another. */
   showLabel?: boolean
+  /** Message to show beneath the field. Absent means the field is fine. */
+  error?: string
 }
 
 // type="text" rather than type="number": number silently discards input it
@@ -26,8 +28,10 @@ export function MeasurementInput({
   placeholder,
   label,
   showLabel = false,
+  error,
 }: MeasurementInputProps) {
   const id = useId()
+  const errorId = `${id}-error`
 
   return (
     <div>
@@ -39,12 +43,20 @@ export function MeasurementInput({
           {label}
         </label>
       )}
-      <div className="flex items-center gap-2 rounded-md border border-border-strong bg-surface p-3 focus-within:border-accent focus-within:ring-3 focus-within:ring-accent-soft">
+      <div
+        className={`flex items-center gap-2 rounded-md border p-3 focus-within:ring-3 ${
+          error
+            ? 'border-error-border bg-error-soft focus-within:border-error focus-within:ring-error-soft'
+            : 'border-border-strong bg-surface focus-within:border-accent focus-within:ring-accent-soft'
+        }`}
+      >
         <input
           id={id}
           type="text"
           inputMode="decimal"
           aria-label={showLabel ? undefined : label}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
           value={value}
           placeholder={placeholder}
           onChange={(event) => onChange(event.target.value)}
@@ -52,6 +64,14 @@ export function MeasurementInput({
         />
         <span className="font-mono text-sm text-muted">{unitLabel(unit)}</span>
       </div>
+      {error && (
+        <p
+          id={errorId}
+          className="mt-2 flex gap-2 text-[13px] text-error before:font-bold before:content-['!']"
+        >
+          {error}
+        </p>
+      )}
     </div>
   )
 }

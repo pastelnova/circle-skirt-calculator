@@ -5,9 +5,10 @@ interface WaistInputProps {
   value: string
   onChange: (value: string) => void
   unit: Unit
+  error?: string
 }
 
-export function WaistInput({ value, onChange, unit }: WaistInputProps) {
+export function WaistInput({ value, onChange, unit, error }: WaistInputProps) {
   return (
     <div>
       <MeasurementInput
@@ -17,6 +18,7 @@ export function WaistInput({ value, onChange, unit }: WaistInputProps) {
         placeholder="Enter your waist"
         label="Waist measurement"
         showLabel
+        error={error}
       />
       {/* Native details, so the keyboard and screen reader behavior comes for
           free. The marker is replaced rather than hidden, per the mockup. */}
