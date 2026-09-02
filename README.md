@@ -97,8 +97,13 @@ Components are not unit tested. They are verified in a real browser instead.
 
 ## Deployment
 
-Not yet chosen. `npm run build` produces static files in `dist/`, so any static
-host will serve it.
+GitHub Pages, at https://giorgiana.li/circle-skirt-calculator/. Every push to
+`main` runs `.github/workflows/deploy.yml`, which lints, tests, builds, and
+publishes `dist/`.
+
+Because the site lives on a subpath rather than a domain root, `vite.config.ts`
+sets `base: '/circle-skirt-calculator/'`. Without it the built `index.html` asks
+for its assets at the domain root and the page loads nothing.
 
 ## Status
 
