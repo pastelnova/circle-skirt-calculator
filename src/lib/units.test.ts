@@ -5,6 +5,7 @@ import {
   formatMeasurement,
   fromDisplay,
   inchesToCm,
+  parseMeasurement,
   toDisplay,
   unitLabel,
 } from './units'
@@ -62,6 +63,42 @@ describe('formatMeasurement', () => {
   it('renders zero without a sign or decimals', () => {
     expect(formatMeasurement(0, 'cm')).toBe('0')
     expect(formatMeasurement(0, 'in')).toBe('0')
+  })
+})
+
+describe('parseMeasurement', () => {
+  it('parses whole numbers and decimals', () => {
+    expect(parseMeasurement('45')).toBe(45)
+    expect(parseMeasurement('45.5')).toBe(45.5)
+  })
+
+  it('trims surrounding whitespace', () => {
+    expect(parseMeasurement(' 45 ')).toBe(45)
+  })
+
+  it('accepts a trailing decimal point, so typing does not break', () => {
+    expect(parseMeasurement('45.')).toBe(45)
+  })
+
+  it('accepts zero and negatives, leaving range rules to validation', () => {
+    expect(parseMeasurement('0')).toBe(0)
+    expect(parseMeasurement('-5')).toBe(-5)
+  })
+
+  it('rejects empty and whitespace-only input rather than reading it as zero', () => {
+    expect(parseMeasurement('')).toBeNull()
+    expect(parseMeasurement('   ')).toBeNull()
+  })
+
+  it('rejects text, including a number with trailing text', () => {
+    expect(parseMeasurement('abc')).toBeNull()
+    expect(parseMeasurement('45abc')).toBeNull()
+  })
+
+  it('rejects non-finite values so they never reach a calculation', () => {
+    expect(parseMeasurement('Infinity')).toBeNull()
+    expect(parseMeasurement('-Infinity')).toBeNull()
+    expect(parseMeasurement('NaN')).toBeNull()
   })
 })
 

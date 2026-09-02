@@ -30,6 +30,21 @@ export function fromDisplay(value: number, unit: Unit): number {
 }
 
 /**
+ * A string the user typed, to a number in the unit they typed it in. Its only
+ * question is whether the text is a number at all: zero and negatives parse
+ * fine, because range and sign are the validation layer's rules, not this one's.
+ */
+export function parseMeasurement(input: string): number | null {
+  const trimmed = input.trim()
+  if (trimmed === '') return null
+
+  // Number() over parseFloat: parseFloat('45abc') returns 45, which would let a
+  // typo through as a real measurement.
+  const value = Number(trimmed)
+  return Number.isFinite(value) ? value : null
+}
+
+/**
  * Rounded display string, without a unit label, so the UI can render the label
  * in its own element. Trailing zeros are trimmed: 2 cm reads as "2", not "2.0".
  */

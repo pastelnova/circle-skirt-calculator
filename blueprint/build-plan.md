@@ -15,7 +15,7 @@ before Feature 1.
 - [x] 1. **Calculation engine** - pure functions in `src/lib/` for waist radius and fabric length across all four skirt types, cm internally, seam and hem allowance as named constants. No UI.
 - [x] 2. **Unit toggle** - inches/cm switch, with conversion at the input and output boundary only.
 - [x] 3. **Skirt type selector** - quarter, half, 3/4, full circle.
-- [ ] 4. **Length selector** - mini, midi, and maxi presets plus a custom override.
+- [x] 4. **Length selector** - mini, midi, and maxi presets plus a custom override.
 - [ ] 5. **Waist input** - measurement field with a short "how to measure your waist" helper.
 - [ ] 6. **Results display** - waist radius and total fabric length in the selected unit.
 - [ ] 7. **Input validation** - Zod schema for waist and custom length: empty, zero, negative, and out-of-range values.
